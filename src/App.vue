@@ -11,7 +11,7 @@
 
     <div class="content__catalog">
       
-      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo" :category-id.sync="filterCategoryId"/>
+      <ProductFilter :product-filter.sync="productFilter"/>
 
       <section class="catalog">
         <ProductList :products="products"/>
@@ -38,25 +38,31 @@ export default {
   },
   data() {
     return {
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: 0,
       page: 1,
-      productsPerPage: 3
+      productsPerPage: 3,
+      productFilter: {
+        priceFrom: 0,
+        priceTo: 0,
+        categoryId: 0,
+        colorId: 0
+      }
     }
   },
   computed: {
     filteredProducts() {
       let filteredProducts = products;
 
-      if (this.filterPriceFrom > 0)
-        filteredProducts = filteredProducts.filter(product => product.price > this.filterPriceFrom);
+      if (this.productFilter.priceFrom > 0)
+        filteredProducts = filteredProducts.filter(product => product.price > this.productFilter.priceFrom);
 
-      if (this.filterPriceTo > 0)
-        filteredProducts = filteredProducts.filter(product => product.price < this.filterPriceTo);
+      if (this.productFilter.priceTo > 0)
+        filteredProducts = filteredProducts.filter(product => product.price < this.productFilter.priceTo);
 
-      if (this.filterCategoryId)
-        filteredProducts = filteredProducts.filter(product => product.categoryid === this.filterCategoryId);  
+      if (this.productFilter.categoryId)
+        filteredProducts = filteredProducts.filter(product => product.categoryid === this.productFilter.categoryId);
+      
+      if (this.productFilter.colorId)
+        filteredProducts = filteredProducts.filter(product => product.colorid === this.productFilter.colorId);
 
       return filteredProducts;
     },

@@ -14,34 +14,22 @@
             {{ product.price }} ₽
         </span>
 
-        <ul class="colors colors--black">
-            <li class="colors__item">
-                <label class="colors__label">
-                <input class="colors__radio sr-only" type="radio" name="color-2" value="#F0F0F0" checked="">
-                <span class="colors__value" style="background-color: #F0F0F0;">
-                </span>
-                </label>
-            </li>
-            <li class="colors__item">
-                <label class="colors__label">
-                <input class="colors__radio sr-only" type="radio" name="color-2" value="#8BE000">
-                <span class="colors__value" style="background-color: #8BE000;">
-                </span>
-                </label>
-            </li>
-            <li class="colors__item">
-                <label class="colors__label">
-                <input class="colors__radio sr-only" type="radio" name="color-2" value="#73B6EA">
-                <span class="colors__value" style="background-color: #73B6EA;">
-                </span>
-                </label>
-            </li>
-        </ul>
+        <BaseColors :color-id.sync="product.colorid" :name="'color-' + product.id" :colors="colors"/>
     </div>        
 </template>>
 
 <script>
+    import BaseColors from './BaseColors';
+    import colors from '../modules/data/colors'
+
     export default {
-        props: ['product']
+        components: { BaseColors },
+        props: ['product'],
+        computed: {
+            colors() {
+                return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
+            }
+        }
+
     }
 </script>
