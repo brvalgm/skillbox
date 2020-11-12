@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a class="catalog__pic" href="#" @click.prevent="$emit('goto-page', 'product', {id: product.id})">
+        <a class="catalog__pic" href="#" @click.prevent="gotoPage('product', {id: product.id})">
             <img :src="product.image" :alt="product.title">
         </a>
 
@@ -21,6 +21,7 @@
 <script>
     import BaseColors from './BaseColors';
     import colors from '../modules/data/colors'
+    import eventBus from '@/eventBus'
 
     export default {
         components: { BaseColors },
@@ -28,6 +29,11 @@
         computed: {
             colors() {
                 return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
+            }
+        },
+        methods: {
+            gotoPage(pageName, pageParam) {
+                eventBus.$emit('goto-page', pageName, pageParam);
             }
         }
 
