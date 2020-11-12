@@ -5,7 +5,7 @@ export default [
     },
     {
         id: 2,
-        title: 'Телфоны'
+        title: 'Телефоны'
     },    
     {
         id: 3,

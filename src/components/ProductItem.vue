@@ -11,7 +11,7 @@
         </h3>
 
         <span class="catalog__price">
-            {{ product.price }} ₽
+            {{ product.price | numberFormat}} ₽
         </span>
 
         <BaseColors :color-id.sync="product.colorid" :name="'color-' + product.id" :colors="colors"/>
@@ -20,22 +20,23 @@
 
 <script>
     import BaseColors from './BaseColors';
-    import colors from '../modules/data/colors'
-    import eventBus from '@/eventBus'
+    import colors from '../modules/data/colors';
+    import gotoPage from '@/helpers/gotoPage';
+    import numberFormat from '@/helpers/numberFormat';
 
     export default {
         components: { BaseColors },
         props: ['product'],
+        filters: {
+            numberFormat
+        },
         computed: {
             colors() {
                 return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
             }
         },
         methods: {
-            gotoPage(pageName, pageParam) {
-                eventBus.$emit('goto-page', pageName, pageParam);
-            }
+           gotoPage
         }
-
     }
 </script>
