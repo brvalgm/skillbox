@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentPageCompanent" :page-params="currentPageParams" @gotoPage="(pageName, pageParams) => gotoPage(pageName, pageParams)"/>
+  <component :is="currentPageCompanent" :page-params="currentPageParams" @goto-page="(pageName, pageParams) => gotoPage(pageName, pageParams)"/>
 </template>
 
 <script>
