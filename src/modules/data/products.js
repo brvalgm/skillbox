@@ -5,7 +5,7 @@ export default [
         colorid: 1,
         colors: [1, 2, 3],   
         title: 'Радионяня Motorola MBP16',
-        price: undefined,
+        price: 3680,
         image: 'img/radio.jpg'
     },
     {
