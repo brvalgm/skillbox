@@ -40,28 +40,7 @@
 
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>
-              <ul class="colors">
-                <li class="colors__item">
-                  <label class="colors__label">
-                    <input class="colors__radio sr-only" type="radio" name="color-item" value="blue" checked="">
-                    <span class="colors__value" style="background-color: #73B6EA;">
-                    </span>
-                  </label>
-                </li>
-                <li class="colors__item">
-                  <label class="colors__label">
-                    <input class="colors__radio sr-only" type="radio" name="color-item" value="yellow">
-                    <span class="colors__value" style="background-color: #FFBE15;">
-                    </span>
-                  </label>
-                </li>
-                <li class="colors__item">
-                  <label class="colors__label">
-                    <input class="colors__radio sr-only" type="radio" name="color-item" value="gray">
-                    <span class="colors__value" style="background-color: #939393;">
-                  </span></label>
-                </li>
-              </ul>
+              <BaseColors :color-id.sync="product.colorid" :name="'color'" :colors="colors" />              
             </fieldset>
 
             <fieldset class="form__block">
@@ -174,12 +153,15 @@
 </template>
 
 <script>
-import products from '@/modules/data/products'
-import categories from '@/modules/data/categories'
+import products from '@/modules/data/products';
+import categories from '@/modules/data/categories';
 import gotoPage from '@/helpers/gotoPage';
 import numberFormat from '@/helpers/numberFormat';
+import BaseColors from '@/components/BaseColors';
+import colors from '@/modules/data/colors'
 
 export default {
+    components: {BaseColors},
     props: ["pageParams"],
     computed: {
         product() {
@@ -187,6 +169,9 @@ export default {
         },
         category() {
             return categories.find(category => category.id === this.product.categoryid);
+        },
+        colors() {
+            return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
         }
     },
     methods: {
