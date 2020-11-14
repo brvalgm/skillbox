@@ -101,9 +101,9 @@
 </template>
 
 <script>
-import categories from '../modules/data/categories'
-import BaseColors from './BaseColors'
-import colors from '../modules/data/colors'
+import BaseColors from '@/components/BaseColors';
+import axios from 'axios';
+import {API_BASE_URL} from '@/config.js' 
 
 export default {
     components: {
@@ -119,7 +119,9 @@ export default {
             priceTo: 0,
             categoryId: 0,
             colorId: 0
-          }
+          },
+          categoriesData: null,
+          colorsData: null
         }
     },
     watch: {
@@ -138,13 +140,20 @@ export default {
     },
     computed: {        
         categories() {
-            return categories;
+          return this.categoriesData ? this.categoriesData.items : [];
         },
         colors() {
-          return colors;
+          return this.colorsData 
+            ? this.colorsData.items.map(color => {
+              return {
+                ...color,
+                value: color.code
+              }
+            })
+            : [];
         }
     },
-    methods: {
+    methods: {        
         submit() {
             this.$emit('update:productFilter', Object.assign({}, this.currentProductFilter));
         },
@@ -154,7 +163,19 @@ export default {
             this.currentProductFilter.categoryId = 0;
             this.currentProductFilter.colorId = 0;
             this.$emit('update:productFilter', Object.assign({}, this.currentProductFilter));
-        }
+        },
+        loadCategories() {
+          axios.get(API_BASE_URL + 'productCategories')
+            .then(response => this.categoriesData = response.data);
+        },
+        loadColors() {
+          axios.get('https://vue-study.skillbox.ru/api/colors')
+            .then(response => this.colorsData = response.data);
+        },
+    },
+    created() {
+      this.loadCategories();
+      this.loadColors();
     }
 }
 </script>

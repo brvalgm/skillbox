@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import CartIndicator from '@/components/CartIndicator'
+import CartIndicator from '@/components/cart/CartIndicator'
 export default {
     components: { CartIndicator }
 }

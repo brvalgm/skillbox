@@ -49,7 +49,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import CartItem from '@/components/CartItem';
+import CartItem from '@/components/cart/CartItem';
 import numberFormat from '@/helpers/numberFormat';
 
 export default {

@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import products from '@/modules/data/products'
-import ProductList from '@/components/ProductList'
-import BasePagination from '@/components/BasePagination'
-import ProductFilter from '@/components/ProductFilter'
+import ProductList from '@/components/product/ProductList';
+import BasePagination from '@/components/BasePagination';
+import ProductFilter from '@/components/product/ProductFilter';
+import axios from 'axios'; 
 
 export default {
   components: {
@@ -42,34 +42,55 @@ export default {
         priceTo: 0,
         categoryId: 0,
         colorId: 0
-      }
+      },
+      productData: null
     }
   },
   computed: {
-    filteredProducts() {
-      let filteredProducts = products;
-
-      if (this.productFilter.priceFrom > 0)
-        filteredProducts = filteredProducts.filter(product => product.price > this.productFilter.priceFrom);
-
-      if (this.productFilter.priceTo > 0)
-        filteredProducts = filteredProducts.filter(product => product.price < this.productFilter.priceTo);
-
-      if (this.productFilter.categoryId)
-        filteredProducts = filteredProducts.filter(product => product.categoryid === this.productFilter.categoryId);
-      
-      if (this.productFilter.colorId)
-        filteredProducts = filteredProducts.filter(product => product.colors.indexOf(this.productFilter.colorId) !== -1);
-
-      return filteredProducts;
-    },
     products() {
-      const offset = (this.page - 1) * this.productsPerPage;
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+      return this.productData 
+        ? this.productData.items.map(product => {
+          return {
+            ...product,
+            image: product.image.file.url
+          }
+        }) 
+        : [];
     },
     countProducts() {
-      return this.filteredProducts.length;
+      return this.productData ? this.productData.pagination.total : 0;
     }
+  },
+  watch: {
+    page() {
+      this.loadProducts();
+    },
+    productFilter() {
+      this.loadProducts();
+    }
+  },
+  methods: {
+    loadProducts() {
+      clearTimeout(this.loadsProductTimer);
+      this.loadsProductTimer = setTimeout(() => {
+         axios.get(`https://vue-study.skillbox.ru/api/products`, {
+          params: {
+            page: this.page,
+            limit: this.productsPerPage,
+            categoryId: this.productFilter.categoryId,
+            colorId: this.productFilter.colorId,
+            minPrice: this.productFilter.priceFrom,
+            maxPrice: this.productFilter.priceTo
+          }
+        }
+        )
+        .then(response => this.productData = response.data);        
+      }, 0);
+     
+    }
+  },
+  created() {
+    this.loadProducts();
   }
 };
 </script>

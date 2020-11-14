@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import ProductItem from './ProductItem'
+import ProductItem from '@/components/product/ProductItem'
 
 export default {
     props: ['products'],

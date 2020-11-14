@@ -14,13 +14,12 @@
             {{ product.price | numberFormat}} ₽
         </span>
 
-        <BaseColors :color-id.sync="product.colorid" :name="'color-' + product.id" :colors="colors"/>
+        <BaseColors :name="'color-' + product.id" :colors="colors"/>
     </div>        
 </template>>
 
 <script>
-    import BaseColors from './BaseColors';
-    import colors from '../modules/data/colors';
+    import BaseColors from '@/components/BaseColors';
     import gotoPage from '@/helpers/gotoPage';
     import numberFormat from '@/helpers/numberFormat';
 
@@ -32,7 +31,12 @@
         },
         computed: {
             colors() {
-                return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
+                return this.product.colors.map(color => {
+                    return {
+                        ...color,
+                        value: color.code
+                    }
+                    });
             }
         },
         methods: {
