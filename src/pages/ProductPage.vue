@@ -1,5 +1,7 @@
 <template>
-    <main class="content container">
+    <main class="content container" v-if="productLoading">Загузка товара...</main>
+    <main class="content container" v-else-if="!productData">Не удалось загрузить товар</main>
+    <main class="content container" v-else>
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -146,31 +148,40 @@
 </template>
 
 <script>
-import products from '@/modules/data/products';
-import categories from '@/modules/data/categories';
 import gotoPage from '@/helpers/gotoPage';
 import numberFormat from '@/helpers/numberFormat';
 import BaseColors from '@/components/BaseColors';
-import colors from '@/modules/data/colors';
 import BaseChangeAmount from '@/components/BaseChangeAmount';
+import axios from 'axios';
+import {API_BASE_URL} from '@/config.js'; 
 
 export default {
     components: {BaseColors, BaseChangeAmount},
     props: ["pageParams"],
     data() {
       return {
-        amount: 1
+        amount: 1,
+        productData: null,
+        productLoading: false,
+        productLoadingFaild: false
       }
     },
     computed: {
         product() {
-            return products.find(product => product.id === +this.$route.params.id);
+            let item = this.productData;
+            item.image = this.productData.image.file.url;
+            return item;
         },
         category() {
-            return categories.find(category => category.id === this.product.categoryid);
+            return this.productData.category;
         },
         colors() {
-            return colors.filter(color => this.product.colors.indexOf(color.id) !== -1);
+            return this.productData.colors.map(color => {
+              return {
+                ...color,
+                value: color.code
+              }
+            });
         }
     },
     methods: {
@@ -180,10 +191,27 @@ export default {
             'addProductToCart',
             {productId: this.product.id, amount: this.amount}
           )
+        },
+        loadProduct() {
+          this.productLoading = true;
+          this.productLoadingFaild = false;
+
+          axios.get(API_BASE_URL + 'products/' + this.$route.params.id)
+            .then(response => this.productData = response.data)
+            .catch(() => this.productLoadingFaild = true)
+            .then(() => this.productLoading = false);
         }        
     },
     filters: {
         numberFormat
+    },
+    watch: {
+      '$route.params.id': {
+        handler() {
+          this.loadProduct();
+        },
+        immediate: true
+      }
     }
 }
 </script>

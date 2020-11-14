@@ -14,6 +14,8 @@
       <ProductFilter :product-filter.sync="productFilter"/>
 
       <section class="catalog">
+        <div v-if="productsLoading">Загрузка товаров...</div>
+        <div v-if="productsLoadingField">Произошла ошибка при загузке товаров <button @click.prevent="loadProducts">Попробовать еще раз!</button> </div>
         <ProductList :products="products" />
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>        
       </section>  
@@ -43,7 +45,9 @@ export default {
         categoryId: 0,
         colorId: 0
       },
-      productData: null
+      productData: null,
+      productsLoading: false,
+      productsLoadingField: false
     }
   },
   computed: {
@@ -71,6 +75,8 @@ export default {
   },
   methods: {
     loadProducts() {
+      this.productsLoading = true;
+      this.productsLoadingField = false;
       clearTimeout(this.loadsProductTimer);
       this.loadsProductTimer = setTimeout(() => {
          axios.get(`https://vue-study.skillbox.ru/api/products`, {
@@ -84,7 +90,9 @@ export default {
           }
         }
         )
-        .then(response => this.productData = response.data);        
+        .then(response => this.productData = response.data)        
+        .catch(() => this.productsLoadingField = true)
+        .then(() => this.productsLoading = false);        
       }, 0);
      
     }
