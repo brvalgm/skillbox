@@ -23,23 +23,19 @@
         Корзина
       </h1>
       <span class="content__info">
-        3 товара
+        {{ products.length }} товара
       </span>
     </div>
 
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+      <form class="cart__form form" action="#" method="POST" @submit.prevent="order">
         <div class="cart__field">
           <div class="cart__data">
             <BaseFormText title="ФИО" :error="formError.name" placeholder="Введите ваше полное имя" v-model="formData.name" />
-
             <BaseFormText title="Адрес доставки" :error="formError.address" placeholder="Введите ваш адрес" v-model="formData.address" />
-
             <BaseFormText title="Телефон" :error="formError.phone" placeholder="Введите ваш телефон" v-model="formData.phone"  type="tel"/>
-
             <BaseFormText title="Email" :error="formError.email" placeholder="Введи ваш Email" v-model="formData.email"  type="email"/>
-
-            <BaseFormTextArea title="Комментарий к заказу" :error="formError.comments" placeholder="Ваши пожелания" v-model="formData.comments" /> 
+            <BaseFormTextArea title="Комментарий к заказу" :error="formError.comment" placeholder="Ваши пожелания" v-model="formData.comment" /> 
           </div>
 
           <div class="cart__options">
@@ -86,37 +82,30 @@
         </div>
 
         <div class="cart__block">
-          <ul class="cart__orders">
-            <li class="cart__order">
-              <h3>Смартфон Xiaomi Redmi Note 7 Pro 6/128GB</h3>
-              <b>18 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Гироскутер Razor Hovertrax 2.0ii</h3>
-              <b>4 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Электрический дрифт-карт Razor Lil’ Crazy</h3>
-              <b>8 990 ₽</b>
-              <span>Артикул: 150030</span>
+          <CartOrders /> 
+          <!-- <ul class="cart__orders">
+            <li class="cart__order" v-for="item in products" :key="item.productId">
+              <h3>{{ item.product.title }}</h3>
+              <b>{{ item.product.price * item.amount | numberFormat }} ₽</b>
+              <span>Артикул: {{ item.productId }}</span>
             </li>
           </ul>
           
           <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>3</b> товара на сумму <b>37 970 ₽</b></p>
-          </div>
+            <p>Доставка: <b>{{ costShipping | numberFormat }} ₽</b></p>
+            <p>Итого: <b>{{ totalAmount }}</b> товара на сумму <b>{{ totalPrice + costShipping | numberFormat }} ₽</b></p>
+          </div> -->
+
+
 
           <button class="cart__button button button--primery" type="submit">
             Оформить заказ
           </button>
         </div>
-        <div class="cart__error form__error-block">
+        <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
           <p>
-            Похоже произошла ошибка. Попробуйте отправить снова или перезагрузите страницу.
+            {{ formErrorMessage }}
           </p>
         </div>
       </form>
@@ -127,13 +116,54 @@
 <script>
 import BaseFormText from '@/components/BaseFormText';
 import BaseFormTextArea from '@/components/BaseFormTextArea';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
+import { mapGetters } from 'vuex';
+import numberFormat from '@/helpers/numberFormat';
+import CartOrders from '@/components/cart/CartOrders';
 
 export default {
-    components: { BaseFormText, BaseFormTextArea },
+    components: { BaseFormText, BaseFormTextArea, CartOrders },
     data() {
         return {
             formData: {},
-            formError: {}
+            formError: {},
+            costShipping: 500,
+            formErrorMessage: ''
+        }
+    },
+    computed: {
+        ...mapGetters({ 
+            products: 'cartDetailProducts',
+            totalPrice: 'cartTotalPrice',
+            totalAmount: 'cartTotalAmount' 
+        })
+    },
+    filters: {
+        numberFormat
+    },
+    methods: {
+        order() {
+            this.formError = {};
+            this.formErrorMessage = '';
+            axios
+                .post( API_BASE_URL + 'api/orders', {
+                    ...this.formData
+                    }, { 
+                    params: {
+                        userAccessKey: this.$store.state.userAccessKey
+                        }                    
+                    }                
+                )
+                .then(response => {                   
+                    this.$store.commit('resetCart');
+                    this.$store.commit('updateOrderInfo', response.data);
+                    this.$router.push({ name: 'orderInfo', params: { id: response.data.id }});
+                })
+                .catch(error => {
+                    this.formError = error.response.data.error.request || {};
+                    this.formErrorMessage = error.response.data.error.message;
+                })
         }
     }
 }
