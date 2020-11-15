@@ -28,7 +28,7 @@
 <script>
 import numberFormat from '@/helpers/numberFormat';
 import BaseChangeAmount from '@/components/BaseChangeAmount';
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
     props: [ 'item' ],
@@ -39,7 +39,7 @@ export default {
                 return this.item.amount;
             },
             set(value) {
-                this.$store.commit('updateCartProductAmount', { productId: this.item.productId, amount: value});
+                this.$store.dispatch('updateCartProductAmount', { productId: this.item.productId, amount: value});
             }
        } 
     },
@@ -47,7 +47,7 @@ export default {
         numberFormat
     },
     methods: {
-        ...mapMutations({ deleteProduct: 'deleteCartProduct' })
+        ...mapActions({ deleteProduct: 'deleteCartProduct' })
     }
 }
 </script>

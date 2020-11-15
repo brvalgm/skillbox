@@ -27,7 +27,8 @@
 import ProductList from '@/components/product/ProductList';
 import BasePagination from '@/components/BasePagination';
 import ProductFilter from '@/components/product/ProductFilter';
-import axios from 'axios'; 
+import axios from 'axios';
+import { API_BASE_URL } from '@/config.js';
 
 export default {
   components: {
@@ -79,7 +80,7 @@ export default {
       this.productsLoadingField = false;
       clearTimeout(this.loadsProductTimer);
       this.loadsProductTimer = setTimeout(() => {
-         axios.get(`https://vue-study.skillbox.ru/api/products`, {
+         axios.get(API_BASE_URL + 'api/products', {
           params: {
             page: this.page,
             limit: this.productsPerPage,

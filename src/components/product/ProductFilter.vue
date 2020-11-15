@@ -165,11 +165,11 @@ export default {
             this.$emit('update:productFilter', Object.assign({}, this.currentProductFilter));
         },
         loadCategories() {
-          axios.get(API_BASE_URL + 'productCategories')
+          axios.get(API_BASE_URL + 'api/productCategories')
             .then(response => this.categoriesData = response.data);
         },
         loadColors() {
-          axios.get('https://vue-study.skillbox.ru/api/colors')
+          axios.get(API_BASE_URL + 'api/colors')
             .then(response => this.colorsData = response.data);
         },
     },

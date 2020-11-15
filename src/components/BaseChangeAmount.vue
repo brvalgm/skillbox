@@ -19,21 +19,15 @@
 <script>
 export default {
     props: ['amount'],
-    data() {
-        return {
-            currentAmount: 0
-        }
-    },
     watch: {
-        currentAmount(value) {
-            this.currentAmount = value;
+        amount(value) {
             this.$emit('update:amount', value);
         }
     },
     methods: {
         changeAmount(value) {
           if (value >= 0)
-            this.currentAmount = value;
+            this.$emit('update:amount', value);
         }
     }
 }

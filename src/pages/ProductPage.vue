@@ -79,10 +79,13 @@
             <div class="item__row">
               <BaseChangeAmount :amount.sync="amount"/>
 
-              <button class="button button--primery" type="submit">
+              <button class="button button--primery" type="submit" :disabled="productAddSending">
                 В корзину
               </button>
             </div>
+
+            <div v-show="productAdded">Товар добавлен в корзину</div>
+            <div v-show="productAddSending">Добавляем товар в корзину</div>
           </form>
         </div>
       </div>
@@ -153,7 +156,8 @@ import numberFormat from '@/helpers/numberFormat';
 import BaseColors from '@/components/BaseColors';
 import BaseChangeAmount from '@/components/BaseChangeAmount';
 import axios from 'axios';
-import {API_BASE_URL} from '@/config.js'; 
+import { API_BASE_URL } from '@/config.js';
+import { mapActions } from 'vuex';
 
 export default {
     components: {BaseColors, BaseChangeAmount},
@@ -163,7 +167,9 @@ export default {
         amount: 1,
         productData: null,
         productLoading: false,
-        productLoadingFaild: false
+        productLoadingFaild: false,
+        productAdded: false,
+        productAddSending: false
       }
     },
     computed: {
@@ -185,18 +191,23 @@ export default {
         }
     },
     methods: {
+        ...mapActions([ 'addProductToCart' ]),
         gotoPage,
         addToCart() {
-          this.$store.commit(
-            'addProductToCart',
-            {productId: this.product.id, amount: this.amount}
-          )
+          this.productAdded = false;
+          this.productAddSending = true;
+
+          this.addProductToCart({ productId: this.product.id, amount: this.amount })
+            .then(() => {
+              this.productAdded = true;
+              this.productAddSending = false;
+            });
         },
         loadProduct() {
           this.productLoading = true;
           this.productLoadingFaild = false;
 
-          axios.get(API_BASE_URL + 'products/' + this.$route.params.id)
+          axios.get(API_BASE_URL + 'api/products/' + this.$route.params.id)
             .then(response => this.productData = response.data)
             .catch(() => this.productLoadingFaild = true)
             .then(() => this.productLoading = false);
