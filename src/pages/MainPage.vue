@@ -25,7 +25,7 @@
 
 <script>
 import ProductList from '@/components/product/ProductList';
-import BasePagination from '@/components/BasePagination';
+import BasePagination from '@/components/base/BasePagination';
 import ProductFilter from '@/components/product/ProductFilter';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';

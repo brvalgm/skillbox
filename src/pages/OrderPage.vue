@@ -82,21 +82,7 @@
         </div>
 
         <div class="cart__block">
-          <CartOrders /> 
-          <!-- <ul class="cart__orders">
-            <li class="cart__order" v-for="item in products" :key="item.productId">
-              <h3>{{ item.product.title }}</h3>
-              <b>{{ item.product.price * item.amount | numberFormat }} ₽</b>
-              <span>Артикул: {{ item.productId }}</span>
-            </li>
-          </ul>
-          
-          <div class="cart__total">
-            <p>Доставка: <b>{{ costShipping | numberFormat }} ₽</b></p>
-            <p>Итого: <b>{{ totalAmount }}</b> товара на сумму <b>{{ totalPrice + costShipping | numberFormat }} ₽</b></p>
-          </div> -->
-
-
+          <CartOrders :products="products" :totalPrice="totalPrice" /> 
 
           <button class="cart__button button button--primery" type="submit">
             Оформить заказ
@@ -114,8 +100,8 @@
 </template>
 
 <script>
-import BaseFormText from '@/components/BaseFormText';
-import BaseFormTextArea from '@/components/BaseFormTextArea';
+import BaseFormText from '@/components/base/BaseFormText';
+import BaseFormTextArea from '@/components/base/BaseFormTextArea';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 import { mapGetters } from 'vuex';
@@ -135,7 +121,6 @@ export default {
     computed: {
         ...mapGetters({ 
             products: 'cartDetailProducts',
-            totalPrice: 'cartTotalPrice',
             totalAmount: 'cartTotalAmount' 
         })
     },

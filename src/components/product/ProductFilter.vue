@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import BaseColors from '@/components/BaseColors';
+import BaseColors from '@/components/base/BaseColors';
 import axios from 'axios';
 import {API_BASE_URL} from '@/config.js' 
 

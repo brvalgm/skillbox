@@ -19,7 +19,7 @@
 </template>>
 
 <script>
-    import BaseColors from '@/components/BaseColors';
+    import BaseColors from '@/components/base/BaseColors';
     import gotoPage from '@/helpers/gotoPage';
     import numberFormat from '@/helpers/numberFormat';
 

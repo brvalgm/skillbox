@@ -20,7 +20,7 @@
       </ul>
 
       <h1 class="content__title">
-        Заказ оформлен <span>№ 23621</span>
+        Заказ оформлен <span>№ {{ order.id }}</span>
       </h1>
     </div>
 
@@ -38,7 +38,7 @@
                 Получатель
               </span>
               <span class="dictionary__value">
-                Иванова Василиса Алексеевна
+                {{ order.name }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -46,7 +46,7 @@
                 Адрес доставки
               </span>
               <span class="dictionary__value">
-                Москва, ул. Ленина, 21, кв. 33
+                {{ order.address }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -54,7 +54,7 @@
                 Телефон
               </span>
               <span class="dictionary__value">
-                8 800 989 74 84
+                {{ order.phone }}
               </span>
             </li>
             <li class="dictionary__item">
@@ -62,7 +62,7 @@
                 Email
               </span>
               <span class="dictionary__value">
-                lalala@mail.ru
+                {{ order.email}}
               </span>
             </li>
             <li class="dictionary__item">
@@ -70,15 +70,14 @@
                 Способ оплаты
               </span>
               <span class="dictionary__value">
-                картой при получении
+                Оплата картой курьеру
               </span>
             </li>
           </ul>
         </div>
-
            
         <div class="cart__block">
-          <CartOrders /> 
+          <CartOrders :products="order.basket.items" :totalPrice="order.totalPrice"/> 
         </div>
       </form>
     </section>
@@ -87,11 +86,15 @@
 
 <script>
 import CartOrders from '@/components/cart/CartOrders';
+import { mapGetters } from 'vuex';
 
 export default {
     components: { CartOrders },
+    computed: {
+      ...mapGetters({ order: 'cartOrderInfo' })
+    },
     created() {
-      if (this.$store.state.orderInfo && this.$store.state.orderInfo.id === this.$route.params.i) {
+      if (this.$store.state.orderInfo && this.$store.state.orderInfo.id === this.$route.params.id) {
         return;
       }
 

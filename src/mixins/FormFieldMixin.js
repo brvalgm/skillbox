@@ -1,4 +1,4 @@
-import BaseFormField from '@/components/BaseFormField';
+import BaseFormField from '@/components/base/BaseFormField';
 
 export default {
     components: { BaseFormField },

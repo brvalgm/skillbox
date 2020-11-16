@@ -27,7 +27,7 @@
 
 <script>
 import numberFormat from '@/helpers/numberFormat';
-import BaseChangeAmount from '@/components/BaseChangeAmount';
+import BaseChangeAmount from '@/components/base/BaseChangeAmount';
 import { mapActions } from 'vuex';
 
 export default {

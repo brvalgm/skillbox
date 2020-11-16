@@ -54,7 +54,7 @@ export default new Vuex.Store({
                     ...item,
                     product : {
                        ...product,
-                       image: product.image.file.url 
+                       image: product.image.file.url                                               
                     }
                 }
             })
@@ -64,6 +64,9 @@ export default new Vuex.Store({
         },
         cartTotalAmount(state, getters) {
             return getters.cartDetailProducts.reduce((acc, item) => item.amount + acc, 0);
+        },
+        cartOrderInfo(state) {
+            return state.orderInfo ;
         }
     },
     actions: {
@@ -114,10 +117,6 @@ export default new Vuex.Store({
         },
         updateCartProductAmount(context, {productId, amount}) {
             context.commit('updateCartProductAmount', {productId, amount});
-
-            if (amount < 1) {
-                return;
-            }
 
             return axios
                 .put(API_BASE_URL + 'api/baskets/products', {

@@ -153,8 +153,8 @@
 <script>
 import gotoPage from '@/helpers/gotoPage';
 import numberFormat from '@/helpers/numberFormat';
-import BaseColors from '@/components/BaseColors';
-import BaseChangeAmount from '@/components/BaseChangeAmount';
+import BaseColors from '@/components/base/BaseColors';
+import BaseChangeAmount from '@/components/base/BaseChangeAmount';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 import { mapActions } from 'vuex';

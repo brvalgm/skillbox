@@ -11,8 +11,8 @@
 
 <script>
 
-import BaseHeader from '@/components/BaseHeader';
-import BaseFooter from '@/components/BaseFooter';
+import BaseHeader from '@/components/base/BaseHeader';
+import BaseFooter from '@/components/base/BaseFooter';
 import { mapActions, mapMutations } from 'vuex';
 
 export default {
