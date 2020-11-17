@@ -194,9 +194,12 @@ export default {
         ...mapActions([ 'addProductToCart' ]),
         gotoPage,
         addToCart() {
+          if (this.amount <= 0)
+            return;
+
           this.productAdded = false;
           this.productAddSending = true;
-
+                    
           this.addProductToCart({ productId: this.product.id, amount: this.amount })
             .then(() => {
               this.productAdded = true;
