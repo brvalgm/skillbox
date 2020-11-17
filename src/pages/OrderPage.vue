@@ -121,7 +121,7 @@ export default {
     computed: {
         ...mapGetters({ 
             products: 'cartDetailProducts',
-            totalAmount: 'cartTotalAmount' 
+            totalPrice: 'cartTotalPrice' 
         })
     },
     filters: {
