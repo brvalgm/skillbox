@@ -194,7 +194,7 @@ export default {
         ...mapActions([ 'addProductToCart' ]),
         gotoPage,
         addToCart() {
-          if (this.amount == 0)
+          if (this.amount <= 0)
             return;
 
           this.productAdded = false;
